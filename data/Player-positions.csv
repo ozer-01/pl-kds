@@ -1,0 +1,451 @@
+Player,Team,Rating,Original_Pos,Group,Sub_Pos
+Mateo Kovačić,Manchester City,82,CM,MID,CM
+Leandro Trossard,Arsenal,83,LW,FWD,LW
+Jarrod Bowen,West Ham United,83,RM,MID,RM
+Benjamin White,Arsenal,83,RB,DEF,RB
+Anthony Gordon,Newcastle United,82,LW,FWD,LW
+Maxence Lacroix,Crystal Palace,81,CB,DEF,CB
+Riccardo Calafiori,Arsenal,81,LB,DEF,LB
+Adam Wharton,Crystal Palace,81,CDM,MID,DM
+Morgan Rogers,Aston Villa,82,CAM,MID,CAM
+Iliman Ndiaye,Everton,81,LM,MID,LM
+Savinho,Manchester City,81,RW,FWD,RW
+Matz Sels,Nottingham Forest,82,GK,GK,GK
+John Stones,Manchester City,82,CB,DEF,CB
+Nathan Aké,Manchester City,82,CB,DEF,CB
+Fabian Schär,Newcastle United,82,CB,DEF,CB
+John McGinn,Aston Villa,81,LM,MID,LM
+Andrew Robertson,Liverpool,81,LB,DEF,LB
+Ollie Watkins,Aston Villa,83,ST,FWD,ST
+Joelinton,Newcastle United,81,CM,MID,CM
+Mikel Merino,Arsenal,83,CM,MID,CM
+Ezri Konsa,Aston Villa,83,CB,DEF,CB
+Antonee Robinson,Fulham,82,LB,DEF,LB
+Palhinha,Bayern München,83,CDM,MID,DM
+Cristian Romero,Tottenham Hotspur,82,CB,DEF,CB
+Dean Henderson,Crystal Palace,81,GK,GK,GK
+Yoane Wissa,Newcastle United,82,ST,FWD,ST
+Matthijs de Ligt,Manchester United,82,CB,DEF,CB
+Kai Havertz,Arsenal,82,ST,FWD,ST
+Federico Chiesa,Liverpool,81,RM,MID,RM
+Morgan Gibbs-White,Nottingham Forest,82,CAM,MID,CAM
+Jean-Philippe Mateta,Crystal Palace,82,ST,FWD,ST
+Boubacar Kamara,Aston Villa,83,CDM,MID,DM
+Daniel Muñoz,Crystal Palace,82,RB,DEF,RB
+Reece James,Chelsea,82,RB,DEF,RB
+Nikola Milenković,Nottingham Forest,82,CB,DEF,CB
+Pedro Neto,Chelsea,81,RM,MID,RM
+Lisandro Martínez,Manchester United,81,CB,DEF,CB
+Guglielmo Vicario,Tottenham Hotspur,83,GK,GK,GK
+Matheus Cunha,Manchester United,83,CAM,MID,CAM
+Antoine Semenyo,AFC Bournemouth,81,RM,MID,RM
+Rayan Aït-Nouri,Manchester City,81,LB,DEF,LB
+Pedro Porro,Tottenham Hotspur,82,RB,DEF,RB
+Jérémy Doku,Manchester City,81,LW,FWD,LW
+Gabriel Martinelli,Arsenal,81,LW,FWD,LW
+Rayan Cherki,Manchester City,81,RW,FWD,RW
+Sven Botman,Newcastle United,82,CB,DEF,CB
+Elliot Anderson,Nottingham Forest,81,CDM,MID,DM
+Kaoru Mitoma,Brighton & Hove Albion,82,LM,MID,LM
+Milos Kerkez,Liverpool,81,LB,DEF,LB
+Murillo,Nottingham Forest,82,CB,DEF,CB
+Granit Xhaka,Sunderland,85,CDM,MID,DM
+Virgil van Dijk,Liverpool,90,CB,DEF,CB
+Jordan Pickford,Everton,84,GK,GK,GK
+Declan Rice,Arsenal,88,CDM,MID,DM
+Marc Cucurella,Chelsea,85,LB,DEF,LB
+Viktor Gyökeres,Arsenal,86,ST,FWD,ST
+Cody Gakpo,Liverpool,84,LM,MID,LM
+William Saliba,Arsenal,88,CB,DEF,CB
+Bukayo Saka,Arsenal,88,RW,FWD,RW
+Enzo Fernández,Chelsea,85,CM,MID,CM
+Zubimendi,Arsenal,84,CDM,MID,DM
+Jurriën Timber,Arsenal,84,RB,DEF,RB
+Omar Marmoush,Manchester City,83,LW,FWD,LW
+Hugo Ekitiké,Liverpool,83,ST,FWD,ST
+Emiliano Martínez,Aston Villa,85,GK,GK,GK
+Mohamed Salah,Liverpool,90,RM,MID,RM
+Bruno Fernandes,Manchester United,87,CM,MID,CM
+Alisson,Liverpool,89,GK,GK,GK
+Youri Tielemans,Aston Villa,85,CM,MID,CM
+Bernardo Silva,Manchester City,84,CM,MID,CM
+James Maddison,Tottenham Hotspur,84,CM,MID,CM
+David Raya,Arsenal,87,GK,GK,GK
+Martin Ødegaard,Arsenal,86,CM,MID,CM
+Gianluigi Donnarumma,Manchester City,89,GK,GK,GK
+Rodri,Manchester City,90,CDM,MID,DM
+Gabriel,Arsenal,89,CB,DEF,CB
+Alexander Isak,Liverpool,88,ST,FWD,ST
+Eberechi Eze,Arsenal,84,CAM,MID,CAM
+Dominik Szoboszlai,Liverpool,84,CAM,MID,CAM
+Ibrahima Konaté,Liverpool,85,CB,DEF,CB
+Phil Foden,Manchester City,85,RW,FWD,RW
+Erling Haaland,Manchester City,91,ST,FWD,ST
+Rúben Dias,Manchester City,86,CB,DEF,CB
+Alexis Mac Allister,Liverpool,86,CM,MID,CM
+Tijjani Reijnders,Manchester City,85,CM,MID,CM
+Sandro Tonali,Newcastle United,86,CDM,MID,DM
+Marc Guéhi,Crystal Palace,83,CB,DEF,CB
+Bryan Mbeumo,Manchester United,85,RW,FWD,RW
+Xavi Simons,Tottenham Hotspur,83,CAM,MID,CAM
+Ryan Gravenberch,Liverpool,86,CDM,MID,DM
+Dejan Kulusevski,Tottenham Hotspur,83,CM,MID,CM
+Bruno Guimarães,Newcastle United,86,CM,MID,CM
+Joško Gvardiol,Manchester City,85,CB,DEF,CB
+Jeremie Frimpong,Liverpool,83,RB,DEF,RB
+Moisés Caicedo,Chelsea,88,CDM,MID,DM
+Piero Hincapié,Bayer 04 Leverkusen,83,CB,DEF,CB
+Florian Wirtz,Liverpool,88,CAM,MID,CAM
+Cole Palmer,Chelsea,87,CAM,MID,CAM
+Giorgi Mamardashvili,Liverpool,84,GK,GK,GK
+Micky van de Ven,Tottenham Hotspur,83,CB,DEF,CB
+Joachim Andersen,Fulham,78,CB,DEF,CB
+Olivier Boscagli,Brighton & Hove Albion,78,CB,DEF,CB
+Emiliano Buendía,Aston Villa,78,CAM,MID,CAM
+Mason Mount,Manchester United,78,CAM,MID,CAM
+Diogo Dalot,Manchester United,78,RB,DEF,RB
+Kiernan Dewsbury-Hall,Everton,78,CAM,MID,CAM
+Mats Wieffer,Brighton & Hove Albion,78,CDM,MID,DM
+Dilane Bakwa,Nottingham Forest,78,RM,MID,RM
+Anton Stach,Leeds United,78,CM,MID,CM
+Quilindschy Hartman,Burnley,77,LB,DEF,LB
+Lucas Bergvall,Tottenham Hotspur,78,CM,MID,CM
+El Hadji Malick Diouf,West Ham United,77,LB,DEF,LB
+André,Wolverhampton Wanderers,78,CDM,MID,DM
+Callum Wilson,West Ham United,78,ST,FWD,ST
+Marco Bizot,Aston Villa,78,GK,GK,GK
+Raheem Sterling,Chelsea,78,LW,FWD,LW
+Niclas Füllkrug,West Ham United,78,ST,FWD,ST
+Joël Veltman,Brighton & Hove Albion,78,RB,DEF,RB
+Tyrone Mings,Aston Villa,78,CB,DEF,CB
+Martin Dúbravka,Burnley,78,GK,GK,GK
+Tosin Adarabioyo,Chelsea,78,CB,DEF,CB
+Richarlison,Tottenham Hotspur,78,ST,FWD,ST
+Yves Bissouma,Tottenham Hotspur,78,CDM,MID,DM
+Saša Lukić,Fulham,78,CDM,MID,DM
+Jørgen Strand Larsen,Wolverhampton Wanderers,78,ST,FWD,ST
+Callum Hudson-Odoi,Nottingham Forest,78,LM,MID,LM
+Tyrick Mitchell,Crystal Palace,78,LB,DEF,LB
+Lutsharel Geertruida,RB Leipzig,78,CB,DEF,CB
+Calvin Bassey,Fulham,78,CB,DEF,CB
+James Garner,Everton,78,CDM,MID,DM
+Vitaliy Mykolenko,Everton,78,LB,DEF,LB
+Jean-Clair Todibo,West Ham United,78,CB,DEF,CB
+Harvey Elliott,Liverpool,78,CAM,MID,CAM
+Ladislav Krejčí,Girona FC,78,CB,DEF,CB
+Manuel Ugarte,Manchester United,78,CDM,MID,DM
+Senne Lammens,Manchester United,78,GK,GK,GK
+Adrien Truffert,AFC Bournemouth,78,LB,DEF,LB
+Bart Verbruggen,Brighton & Hove Albion,78,GK,GK,GK
+Emmanuel Agbadou,Wolverhampton Wanderers,78,CB,DEF,CB
+Toluwalase Arokodare,Wolverhampton Wanderers,78,ST,FWD,ST
+Liam Delap,Chelsea,78,ST,FWD,ST
+Kevin Schade,Brentford,78,LM,MID,LM
+Romeo Lavia,Chelsea,78,CDM,MID,DM
+Conor Bradley,Liverpool,78,RB,DEF,RB
+Jamie Gittens,Chelsea,78,LM,MID,LM
+Alejandro Garnacho,Chelsea,78,LM,MID,LM
+Leny Yoro,Manchester United,78,CB,DEF,CB
+Rico Lewis,Manchester City,77,RB,DEF,RB
+Jorrel Hato,Chelsea,78,LB,DEF,LB
+Nico O'Reilly,Manchester City,77,LB,DEF,LB
+Ross Barkley,Aston Villa,77,CM,MID,CM
+Joe Rodon,Leeds United,77,CB,DEF,CB
+Axel Disasi,Chelsea,77,CB,DEF,CB
+Aaron Ramsdale,Southampton,77,GK,GK,GK
+Ibrahim Sangaré,Nottingham Forest,77,CDM,MID,DM
+Gabriel Gudmundsson,Leeds United,77,LB,DEF,LB
+Marcus Tavernier,AFC Bournemouth,77,LM,MID,LM
+Jhon Arias,Wolverhampton Wanderers,77,RW,FWD,RW
+Cheick Doucouré,Crystal Palace,77,CDM,MID,DM
+Georginio Rutter,Brighton & Hove Albion,77,CAM,MID,CAM
+Arnaud Kalimuendo,Nottingham Forest,77,ST,FWD,ST
+Amine Adli,AFC Bournemouth,77,ST,FWD,ST
+Robin Roefs,Sunderland,77,GK,GK,GK
+Cristhian Mosquera,Arsenal,77,CB,DEF,CB
+Yehor Yarmoliuk,Brentford,76,CM,MID,CM
+Oscar Bobb,Manchester City,76,RW,FWD,RW
+Igor Jesus,Nottingham Forest,77,ST,FWD,ST
+Alphonse Areola,West Ham United,77,GK,GK,GK
+Lewis Dunk,Brighton & Hove Albion,77,CB,DEF,CB
+Raúl Jiménez,Fulham,77,ST,FWD,ST
+Will Hughes,Crystal Palace,77,CDM,MID,DM
+Jefferson Lerma,Crystal Palace,77,CDM,MID,DM
+Kenny Tete,Fulham,77,RB,DEF,RB
+Harry Wilson,Fulham,77,RM,MID,RM
+Enes Ünal,AFC Bournemouth,77,ST,FWD,ST
+Oleksandr Zinchenko,Arsenal,77,LB,DEF,LB
+Josh Cullen,Burnley,77,CDM,MID,DM
+Mathias Jensen,Brentford,77,CM,MID,CM
+Daichi Kamada,Crystal Palace,77,CM,MID,CM
+Ryan Yates,Nottingham Forest,77,CDM,MID,DM
+Ryan Sessegnon,Fulham,77,LB,DEF,LB
+Tomáš Souček,West Ham United,77,CDM,MID,DM
+Ethan Pinnock,Brentford,77,CB,DEF,CB
+Emile Smith Rowe,Fulham,77,CAM,MID,CAM
+Sepp van den Berg,Brentford,77,CB,DEF,CB
+Dwight McNeil,Everton,77,LM,MID,LM
+Jaka Bijol,Leeds United,77,CB,DEF,CB
+Jacob Ramsey,Newcastle United,77,LW,FWD,LW
+Joshua Zirkzee,Manchester United,77,ST,FWD,ST
+Brian Brobbey,Sunderland,77,ST,FWD,ST
+Yasin Ayari,Brighton & Hove Albion,77,CDM,MID,DM
+Filip Jörgensen,Chelsea,77,GK,GK,GK
+Habib Diarra,Sunderland,77,CM,MID,CM
+Dango Ouattara,Brentford,77,RM,MID,RM
+Mathys Tel,Tottenham Hotspur,77,ST,FWD,ST
+Kobbie Mainoo,Manchester United,77,CM,MID,CM
+Noah Sadiki,Sunderland,77,CM,MID,CM
+Mateus Fernandes,West Ham United,76,CAM,MID,CAM
+Ethan Nwaneri,Arsenal,76,RW,FWD,RW
+Thierno Barry,Everton,76,ST,FWD,ST
+Christantus Uche,Getafe CF,76,ST,FWD,ST
+James Ward-Prowse,West Ham United,76,CM,MID,CM
+Ethan Ampadu,Leeds United,76,CDM,MID,DM
+Noah Okafor,Leeds United,76,ST,FWD,ST
+Mads Hermansen,West Ham United,76,GK,GK,GK
+Enzo Le Fée,Sunderland,76,CM,MID,CM
+Beto,Everton,76,ST,FWD,ST
+Omari Hutchinson,Nottingham Forest,75,CAM,MID,CAM
+Dário Essugo,Chelsea,75,CDM,MID,DM
+Maxime Estève,Burnley,76,CB,DEF,CB
+Zeki Amdouni,Burnley,75,ST,FWD,ST
+James Trafford,Manchester City,76,GK,GK,GK
+Rodrigo Muniz,Fulham,76,ST,FWD,ST
+Wilson Odobert,Tottenham Hotspur,76,LW,FWD,LW
+Eli Junior Kroupi,AFC Bournemouth,75,ST,FWD,ST
+Kevin,Fulham,76,LM,MID,LM
+Sam Johnstone,Wolverhampton Wanderers,76,GK,GK,GK
+José Sá,Wolverhampton Wanderers,76,GK,GK,GK
+Adama Traoré,Fulham,76,RM,MID,RM
+David Brooks,AFC Bournemouth,76,RM,MID,RM
+Timothy Castagne,Fulham,76,RB,DEF,RB
+Rico Henry,Brentford,76,LB,DEF,LB
+Guido Rodríguez,West Ham United,76,CDM,MID,DM
+Kyle Walker-Peters,West Ham United,76,RB,DEF,RB
+Lukas Nmecha,Leeds United,76,ST,FWD,ST
+Issa Diop,Fulham,76,CB,DEF,CB
+Daniel James,Leeds United,76,RW,FWD,RW
+Vitaly Janelt,Brentford,76,CM,MID,CM
+Ao Tanaka,Leeds United,76,CDM,MID,DM
+Sean Longstaff,Leeds United,76,CM,MID,CM
+Joe Willock,Newcastle United,76,CM,MID,CM
+Santiago Bueno,Wolverhampton Wanderers,76,CB,DEF,CB
+Igor Julio,Brighton & Hove Albion,76,CB,DEF,CB
+Konstantinos Mavropanos,West Ham United,76,CB,DEF,CB
+Benoît Badiashile,Chelsea,76,CB,DEF,CB
+Keane Lewis-Potter,Brentford,76,LB,DEF,LB
+Daniel Ballard,Sunderland,76,CB,DEF,CB
+Maximilian Kilman,West Ham United,76,CB,DEF,CB
+Crysencio Summerville,West Ham United,76,LM,MID,LM
+Jake O'Brien,Everton,76,RB,DEF,RB
+Morato,Nottingham Forest,76,CB,DEF,CB
+Radu Drăgușin,Tottenham Hotspur,75,CB,DEF,CB
+Simon Adingra,Sunderland,76,LW,FWD,LW
+Alex Scott,AFC Bournemouth,76,CAM,MID,CAM
+Trai Hume,Sunderland,76,RB,DEF,RB
+Diego Gómez,Brighton & Hove Albion,75,CM,MID,CM
+Facundo Buonanotte,Brighton & Hove Albion,75,CAM,MID,CAM
+Archie Gray,Tottenham Hotspur,75,CDM,MID,DM
+Jack Hinshelwood,Brighton & Hove Albion,75,CDM,MID,DM
+Patrick Dorgu,Manchester United,75,LB,DEF,LB
+Antonín Kinský,Tottenham Hotspur,75,GK,GK,GK
+Marshall Munetsi,Wolverhampton Wanderers,74,CM,MID,CM
+Marcus Edwards,Burnley,75,RM,MID,RM
+Jaidon Anthony,Burnley,75,LM,MID,LM
+Jayden Bogle,Leeds United,75,RB,DEF,RB
+Brenden Aaronson,Leeds United,74,RW,FWD,RW
+Ilia Gruev,Leeds United,74,CDM,MID,DM
+Carlos Alcaraz,Everton,75,CAM,MID,CAM
+Lesley Ugochukwu,Burnley,74,CDM,MID,DM
+Hannibal,Burnley,74,CM,MID,CM
+Jackson Tchatchoua,Wolverhampton Wanderers,74,RB,DEF,RB
+Lucas Pires,Burnley,74,LB,DEF,LB
+Łukasz Fabiański,West Ham United,75,GK,GK,GK
+Ben Davies,Tottenham Hotspur,75,CB,DEF,CB
+Solly March,Brighton & Hove Albion,75,RM,MID,RM
+Michael Keane,Everton,75,CB,DEF,CB
+Adam Webster,Brighton & Hove Albion,75,CB,DEF,CB
+Bertrand Traoré,Sunderland,75,RW,FWD,RW
+Arthur Masuaku,Sunderland,75,LB,DEF,LB
+Victor Lindelöf,Aston Villa,75,CB,DEF,CB
+Kristoffer Ajer,Brentford,75,RB,DEF,RB
+Connor Roberts,Burnley,75,RB,DEF,RB
+Hwang Hee Chan,Wolverhampton Wanderers,74,ST,FWD,ST
+Jacob Bruun Larsen,Burnley,74,LM,MID,LM
+Taiwo Awoniyi,Nottingham Forest,75,ST,FWD,ST
+Reiss Nelson,Arsenal,75,RM,MID,RM
+James Justin,Leeds United,74,RB,DEF,RB
+Jean-Ricner Bellegarde,Wolverhampton Wanderers,75,CAM,MID,CAM
+Eddie Nketiah,Crystal Palace,74,ST,FWD,ST
+Jorge Cuenca,Fulham,74,CB,DEF,CB
+Tyrell Malacia,Manchester United,75,LB,DEF,LB
+Pascal Struijk,Leeds United,75,CB,DEF,CB
+Frank Onyeka,Brentford,74,CM,MID,CM
+Jordan Beyer,Burnley,74,CB,DEF,CB
+Sebastiaan Bornauw,Leeds United,74,CB,DEF,CB
+Altay Bayındır,Manchester United,75,GK,GK,GK
+Joël Piroe,Leeds United,75,ST,FWD,ST
+Wilson Isidor,Sunderland,75,ST,FWD,ST
+Julian Araujo,AFC Bournemouth,74,RB,DEF,RB
+Aaron Hickey,Brentford,74,RB,DEF,RB
+Fábio Carvalho,Brentford,74,CAM,MID,CAM
+Toti,Wolverhampton Wanderers,75,CB,DEF,CB
+Wilfried Gnonto,Leeds United,74,LW,FWD,LW
+Merlin Röhl,SC Freiburg,74,CAM,MID,CAM
+Hugo Bueno,Wolverhampton Wanderers,74,LB,DEF,LB
+Tim Iroegbunam,Everton,74,CDM,MID,DM
+Diego Coppola,Brighton & Hove Albion,74,CB,DEF,CB
+Brajan Gruda,Brighton & Hove Albion,74,CAM,MID,CAM
+Chemsdine Talbi,Sunderland,74,RW,FWD,RW
+Tyler Dibling,Everton,74,RM,MID,RM
+Fer López,Wolverhampton Wanderers,73,RW,FWD,RW
+Jason Steele,Brighton & Hove Albion,73,GK,GK,GK
+Adam Smith,AFC Bournemouth,73,RB,DEF,RB
+Benjamin Lecomte,Fulham,74,GK,GK,GK
+Dominic Calvert-Lewin,Leeds United,74,ST,FWD,ST
+Kalvin Phillips,Manchester City,74,CDM,MID,DM
+Jack Harrison,Leeds United,73,LW,FWD,LW
+Mark Travers,Everton,72,GK,GK,GK
+Zian Flemming,Burnley,73,ST,FWD,ST
+Illan Meslier,Leeds United,72,GK,GK,GK
+Hjalmar Ekdal,Burnley,72,CB,DEF,CB
+Armando Broja,Burnley,72,ST,FWD,ST
+Yerson Mosquera,Wolverhampton Wanderers,72,CB,DEF,CB
+Rodrigo Gomes,Wolverhampton Wanderers,73,LW,FWD,LW
+David Møller Wolfe,Wolverhampton Wanderers,73,LB,DEF,LB
+Antoni Milambo,Brentford,73,CM,MID,CM
+James McAtee,Nottingham Forest,73,RM,MID,RM
+Freddie Potts,West Ham United,72,CDM,MID,DM
+Kota Takai,Tottenham Hotspur,72,CB,DEF,CB
+Eliezer Mayenda,Sunderland,72,ST,FWD,ST
+Soungoutou Magassa,West Ham United,73,CDM,MID,DM
+Josh King,Fulham,73,CAM,MID,CAM
+Jair Cunha,Nottingham Forest,74,CB,DEF,CB
+James Milner,Brighton & Hove Albion,73,CM,MID,CM
+Karl Darlow,Leeds United,73,GK,GK,GK
+Tom Cairney,Fulham,74,CM,MID,CM
+Matt Doherty,Wolverhampton Wanderers,74,CB,DEF,CB
+Willy Boly,Nottingham Forest,73,CB,DEF,CB
+Jamaal Lascelles,Newcastle United,73,CB,DEF,CB
+Emil Krafth,Newcastle United,73,CB,DEF,CB
+Josh Laurent,Burnley,73,CDM,MID,DM
+Joe Worrall,Burnley,73,CB,DEF,CB
+Josh Dasilva,Brentford,72,CM,MID,CM
+Axel Tuanzebe,Burnley,73,RB,DEF,RB
+Lyle Foster,Burnley,73,ST,FWD,ST
+Borna Sosa,Crystal Palace,73,LB,DEF,LB
+Anthony Patterson,Sunderland,73,GK,GK,GK
+Ki-Jana Hoever,Wolverhampton Wanderers,73,RB,DEF,RB
+James Hill,AFC Bournemouth,72,CB,DEF,CB
+Mike Trésor,Burnley,73,LM,MID,LM
+Dennis Cirkin,Sunderland,72,LB,DEF,LB
+Dan Neil,Sunderland,73,CDM,MID,DM
+Chadi Riad,Crystal Palace,72,CB,DEF,CB
+Lamare Bogarde,Aston Villa,72,CDM,MID,DM
+Stefan Bajcetic,Liverpool,73,CDM,MID,DM
+Bashir Humphreys,Burnley,73,LB,DEF,LB
+Lewis Miley,Newcastle United,73,CM,MID,CM
+Stefanos Tzimas,Brighton & Hove Albion,72,ST,FWD,ST
+Andrés García,Aston Villa,73,RB,DEF,RB
+Álex Jiménez,Milano FC,73,RB,DEF,RB
+Charalampos Kostoulas,Brighton & Hove Albion,72,ST,FWD,ST
+Jaydee Canvot,Crystal Palace,70,CB,DEF,CB
+Nicolò Savona,Nottingham Forest,72,RB,DEF,RB
+Ayden Heaven,Manchester United,69,CB,DEF,CB
+Veljko Milosavljević,AFC Bournemouth,71,CB,DEF,CB
+Harrison Reed,Fulham,72,CDM,MID,DM
+Sam Byram,Leeds United,72,LB,DEF,LB
+Luke O'Nien,Sunderland,72,CB,DEF,CB
+Angus Gunn,Nottingham Forest,72,GK,GK,GK
+John Victor,Nottingham Forest,71,GK,GK,GK
+Nathan Patterson,Everton,71,RB,DEF,RB
+Naouirou Ahamada,Crystal Palace,68,CM,MID,CM
+William Osula,Newcastle United,71,ST,FWD,ST
+Callum Marshall,West Ham United,66,ST,FWD,ST
+Marc Guiu,Chelsea,71,ST,FWD,ST
+Giovanni Leoni,Liverpool,69,CB,DEF,CB
+Josh Acheampong,Chelsea,71,CB,DEF,CB
+Tyrique George,Chelsea,71,LM,MID,LM
+Luis Guilherme,West Ham United,71,RM,MID,RM
+Justin Devenny,Crystal Palace,71,CAM,MID,CAM
+Rio Ngumoha,Liverpool,68,LM,MID,LM
+Tom Heaton,Manchester United,67,GK,GK,GK
+John Ruddy,Newcastle United,68,GK,GK,GK
+Séamus Coleman,Everton,70,RB,DEF,RB
+Ashley Barnes,Burnley,70,ST,FWD,ST
+Nathaniel Clyne,Crystal Palace,70,RB,DEF,RB
+Daniel Bentley,Wolverhampton Wanderers,71,GK,GK,GK
+Václav Hladký,Burnley,69,GK,GK,GK
+Marcus Bettinelli,Manchester City,70,GK,GK,GK
+Freddie Woodman,Liverpool,71,GK,GK,GK
+Brandon Austin,Tottenham Hotspur,67,GK,GK,GK
+Hannes Delcroix,Burnley,71,CB,DEF,CB
+Andy Irving,West Ham United,70,CM,MID,CM
+Will Dennis,AFC Bournemouth,67,GK,GK,GK
+Ian Poveda,Sunderland,69,RW,FWD,RW
+Gabriel Slonina,Chelsea,68,GK,GK,GK
+Timothée Pembélé,Sunderland,70,RB,DEF,RB
+Oliver Sonne,Burnley,70,RB,DEF,RB
+Myles Peart-Harris,Brentford,67,RM,MID,RM
+Hákon Valdimarsson,Brentford,68,GK,GK,GK
+Loum Tchaouna,Burnley,71,RM,MID,RM
+Ben Gannon-Doak,AFC Bournemouth,71,RM,MID,RM
+Romaine Mundle,Sunderland,71,LW,FWD,LW
+Max Weiß,Burnley,68,GK,GK,GK
+Julio Soler,AFC Bournemouth,68,LB,DEF,LB
+Chris Rigg,Sunderland,71,CAM,MID,CAM
+Romain Esse,Crystal Palace,70,RW,FWD,RW
+Oliver Scarles,West Ham United,70,LB,DEF,LB
+Tom Watson,Brighton & Hove Albion,68,LM,MID,LM
+George Earthy,West Ham United,67,CAM,MID,CAM
+Lewis Orford,West Ham United,61,CDM,MID,DM
+Zach Abbott,Nottingham Forest,61,CB,DEF,CB
+Rhys Williams,Liverpool,61,CB,DEF,CB
+Harrison Ashby,Newcastle United,64,RB,DEF,RB
+Dane Scarlett,Tottenham Hotspur,65,ST,FWD,ST
+Adam Aznou,Everton,66,LB,DEF,LB
+Harrison Jones,Sunderland,60,CAM,MID,CAM
+Julian Eyestone,Brentford,58,GK,GK,GK
+Caleb Kporha,Crystal Palace,62,RB,DEF,RB
+Diego León,Manchester United,64,LB,DEF,LB
+Sam Chambers,Leeds United,61,CAM,MID,CAM
+Gustavo Nunes,Brentford,65,LM,MID,LM
+Remy Rees-Dottin,AFC Bournemouth,60,ST,FWD,ST
+Joe Knight,Brighton & Hove Albion,59,CM,MID,CM
+Chido Obi,Manchester United,65,ST,FWD,ST
+Mateus Mané,Wolverhampton Wanderers,60,RW,FWD,RW
+Ármin Pécsi,Liverpool,64,GK,GK,GK
+Rio Cardines,Crystal Palace,62,RB,DEF,RB
+Bradley Burrowes,Aston Villa,65,RM,MID,RM
+Nehemiah Oriola,Brighton & Hove Albion,59,LM,MID,LM
+Simon Moore,Sunderland,66,GK,GK,GK
+Mark Gillespie,Newcastle United,62,GK,GK,GK
+Alex Cairns,Leeds United,63,GK,GK,GK
+Remi Matthews,Crystal Palace,63,GK,GK,GK
+Tom King,Everton,64,GK,GK,GK
+Ellery Balcombe,Brentford,63,GK,GK,GK
+Ajibola Alese,Sunderland,66,LB,DEF,LB
+Tom McGill,Brighton & Hove Albion,62,GK,GK,GK
+Paris Maghoma,Brentford,66,CM,MID,CM
+Calvin Ramsay,Liverpool,65,RB,DEF,RB
+Leo Hjelde,Sunderland,66,LB,DEF,LB
+Jay Matete,Sunderland,64,CM,MID,CM
+Matthew Cox,Brentford,65,GK,GK,GK
+Abdoullah Ba,Sunderland,65,RW,FWD,RW
+Harry Tyrer,Everton,64,GK,GK,GK
+Tyler Fredricson,Manchester United,65,CB,DEF,CB
+Max Thompson,Newcastle United,58,GK,GK,GK
+Alex Murphy,Newcastle United,64,LB,DEF,LB
+Owen Bevan,AFC Bournemouth,62,CB,DEF,CB
+Jaydon Banel,Burnley,64,LM,MID,LM
+Joe Anderson,Sunderland,63,CB,DEF,CB
+Enock Agyei,Burnley,63,RM,MID,RM
+Ahmed Abdullahi,Sunderland,58,ST,FWD,ST
+Enso González,Wolverhampton Wanderers,63,LW,FWD,LW
+Yunus Emre Konak,Brentford,62,CDM,MID,DM
+Benjamin Arthur,Brentford,65,CB,DEF,CB
+Jonah Kusi-Asare,Bayern München,60,ST,FWD,ST
+Romelle Donovan,Brentford,61,RM,MID,RM
+Trey Nyoni,Liverpool,64,CM,MID,CM
+Tawanda Chirewa,Wolverhampton Wanderers,64,LM,MID,LM
