@@ -213,11 +213,10 @@ def render_footer():
 def render_sidebar_info():
     """Sidebar hakkında bilgi kutusunu render eder."""
     st.info(
-        f"**Premier League 2024-25** verisi ile çalışır.\n\n"
-        f"**Alt pozisyonlar** (CB, RB, LB, DM, CM, CAM, RM, LM, RW, LW, ST) desteklenir.\n\n"
-        f"Van Dijk (CB) artık RB'ye **atanamaz**!\n\n"
-        f"**PuLP** ile Doğrusal Programlama optimizasyonu.\n\n"
-        f"**Karar Destek Sistemi** ile Duyarlılık ve Senaryo Analizi."
+        f"**Premier League 2024-25** sezonu verileri ile çalışır.\n\n"
+        f"**Detaylı Pozisyonlar** (CB, RB, LB, DM, CM, CAM, RM, LM, RW, LW, ST) bazında kadro optimizasyonu yapar.\n\n"
+        f"**PuLP** kütüphanesi kullanılarak Doğrusal Programlama modeli oluşturulmuştur.\n\n"
+        f"**Karar Destek Sistemi**; Duyarlılık Analizi, Senaryo Planlama ve TOPSIS yöntemlerini içerir."
     )
 
 
