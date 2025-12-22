@@ -24,6 +24,7 @@ Kullanılan Teknikler:
 """
 
 import streamlit as st
+import pandas as pd
 
 # Modüller
 from src.config import (
@@ -39,6 +40,20 @@ from src.ui_components import (
     render_info_box, render_footer, render_sidebar_info,
     format_position_display, get_icon
 )
+from src.decision_analyzer import (
+    calculate_weighted_score, calculate_squad_metrics, 
+    rank_alternative_solutions, generate_decision_report, get_risk_alerts
+)
+from src.sensitivity_analyzer import SensitivityAnalyzer
+from src.alternative_solutions import (
+    what_if_budget_analysis, what_if_rating_minimum, 
+    what_if_formation_change
+)
+from src.explainability import SquadExplainer
+from src.compatibility import CompatibilityAnalyzer
+from src.pareto_analysis import ParetoAnalyzer
+from src.narrative_builder import NarrativeBuilder
+from src.bench_analyzer import BenchAnalyzer
 
 
 # =============================================================================
@@ -276,11 +291,17 @@ def main():
         # =====================================================================
         # SEKMELER
         # =====================================================================
-        tab1, tab2, tab3, tab4 = st.tabs([
+        tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10 = st.tabs([
             "Saha Görünümü", 
             "Kadro Listesi",
             "Takım Kadrosu",
-            "Oyuncu Önerileri"
+            "Oyuncu Önerileri",
+            "Karar Destek",
+            "Senaryo Analizi",
+            "Oyuncu Uyumluluğu",
+            "Pareto Frontier",
+            "Kadro Raporu",
+            "Bench & Yedekler"
         ])
         
         # -----------------------------------------------------------------
@@ -478,6 +499,495 @@ def main():
                     hide_index=True,
                     use_container_width=True
                 )
+        
+        # -----------------------------------------------------------------
+        # TAB 5: KARAR DESTEK ANALİZİ
+        # -----------------------------------------------------------------
+        with tab5:
+            st.markdown(f"### {get_icon('analytics')} Karar Destek Sistemi", unsafe_allow_html=True)
+            
+            # Karar raporu oluştur
+            weights = {'rating': 0.25, 'form': 0.20, 'offense': 0.20, 'defense': 0.20, 'cost_penalty': 0.15}
+            decision_report = generate_decision_report(selected_df, total_score, budget, current_formation, weights)
+            
+            # 1. Kadro Raporu
+            st.subheader("📊 Kadro Analiz Raporu")
+            
+            col_d1, col_d2, col_d3 = st.columns(3)
+            with col_d1:
+                st.metric("Toplam Skor", f"{decision_report['total_score']:.2f}", "0-100 skala")
+            with col_d2:
+                st.metric("Bütçe Kullanımı", f"{decision_report['budget_utilization']:.1f}%", f"£{decision_report['total_cost']:.1f}M")
+            with col_d3:
+                st.metric("Risk Sayısı", len(decision_report['risk_alerts']), "Dikkat Noktası")
+            
+            # 2. Güçlü ve Zayıf Yönler
+            col_str1, col_str2 = st.columns(2)
+            
+            with col_str1:
+                st.subheader("💪 Güçlü Yönler")
+                for strength in decision_report['strengths']:
+                    st.write(strength)
+            
+            with col_str2:
+                st.subheader("⚠️ Zayıf Yönler")
+                for weakness in decision_report['weaknesses']:
+                    st.write(weakness)
+            
+            # 3. Risk Uyarıları
+            if decision_report['risk_alerts']:
+                st.subheader("🚨 Risk Uyarıları")
+                for alert in decision_report['risk_alerts']:
+                    if alert['level'] == 'high':
+                        st.error(f"**{alert['type']}**: {alert['message']}")
+                    else:
+                        st.warning(f"**{alert['type']}**: {alert['message']}")
+            
+            # 4. Öneriler
+            st.subheader("💡 Tavsiyeler")
+            for rec in decision_report['recommendations']:
+                st.write(rec)
+            
+            # 5. Duyarlılık Analizi
+            st.divider()
+            st.subheader("📈 Duyarlılık Analizi (Sensitivity Analysis)")
+            
+            col_sens1, col_sens2 = st.columns(2)
+            
+            with col_sens1:
+                st.info("Hangi parametrenin kadraya en çok etki ettiğini görmek için seçin:")
+                param_to_analyze = st.selectbox(
+                    "Parametre Seçin:",
+                    options=['rating', 'form', 'offense', 'defense', 'cost_penalty'],
+                    format_func=lambda x: x.replace('_', ' ').title()
+                )
+            
+            with col_sens2:
+                st.info(f"Seçilen parametre: {param_to_analyze.replace('_', ' ').title()}")
+            
+            # Duyarlılık analizi çalıştır
+            try:
+                sensitivity_analyzer = SensitivityAnalyzer(selected_df, budget, weights)
+                tornado_df = sensitivity_analyzer.tornado_analysis()
+                ranking_df = sensitivity_analyzer.parameter_ranking()
+                
+                st.write("**Parametre Etki Sıralaması (Tornado Analizi):**")
+                st.dataframe(ranking_df[['Sıra', 'Parametre', 'Etki_Büyüklüğü', 'Yüzde_Etki']], hide_index=True)
+                
+                # Seçili parametre için detay
+                param_sensitivity = sensitivity_analyzer.analyze_weight_sensitivity(param_to_analyze, step=0.05)
+                
+                col_chart1, col_chart2 = st.columns(2)
+                
+                with col_chart1:
+                    st.write(f"**{param_to_analyze.title()} Parametresinin Etkisi:**")
+                    st.dataframe(param_sensitivity, hide_index=True)
+                
+                with col_chart2:
+                    # Grafik oluştur
+                    import plotly.graph_objects as go
+                    fig = go.Figure()
+                    fig.add_trace(go.Scatter(
+                        x=param_sensitivity['Yüzde_Değişim'],
+                        y=param_sensitivity['Skor'],
+                        mode='lines+markers',
+                        name='Skor',
+                        line=dict(color='#1a472a', width=3),
+                        marker=dict(size=8, color='#d4af37')
+                    ))
+                    fig.update_layout(
+                        title=f"{param_to_analyze.title()} Sensitivitesi",
+                        xaxis_title="Parametre Değişimi (%)",
+                        yaxis_title="Kadro Skoru",
+                        template="plotly_white",
+                        height=400,
+                        hovermode='x unified'
+                    )
+                    st.plotly_chart(fig, use_container_width=True)
+            
+            except Exception as e:
+                st.error(f"Duyarlılık analizi hesaplanırken hata: {e}")
+        
+        # -----------------------------------------------------------------
+        # TAB 6: SENARYO ANALİZİ
+        # -----------------------------------------------------------------
+        with tab6:
+            st.markdown(f"### {get_icon('scenarios')} What-If Senaryo Analizi", unsafe_allow_html=True)
+            st.markdown("Farklı parametreler değiştiğinde kadroya ne olacağını görmek için senaryoları test edin.")
+            
+            scenario_type = st.selectbox(
+                "Analiz Türü Seçin:",
+                options=[
+                    "Bütçe Senaryoları",
+                    "Rating Minimum Seviyeleri",
+                    "Formation Değişiklikleri"
+                ]
+            )
+            
+            if scenario_type == "Bütçe Senaryoları":
+                st.subheader("💰 Bütçe What-If Analizi")
+                st.markdown("Bütçeyi %20 azaltır/arttırırsak ne olur?")
+                
+                budget_scenarios = what_if_budget_analysis(
+                    selected_df, 
+                    df_full,
+                    budget,
+                    budget_changes=[-0.2, -0.1, 0, 0.1, 0.2]
+                )
+                
+                st.dataframe(budget_scenarios, hide_index=True, use_container_width=True)
+                
+                st.markdown("**Sonuç:** Bütçe değişiklikleri kadroya nasıl etki ediyor?")
+                for idx, row in budget_scenarios.iterrows():
+                    if row['Bütçe_Değişim'] == '+0%':
+                        st.info(f"📍 **Mevcut Senaryo**: {row['Tavsiye']}")
+            
+            elif scenario_type == "Rating Minimum Seviyeleri":
+                st.subheader("⭐ Minimum Rating Seviyeleri What-If Analizi")
+                st.markdown("Different quality levels (70, 75, 80, 85) ile ne kadrolar oluşturulabilir?")
+                
+                rating_scenarios = what_if_rating_minimum(
+                    selected_df,
+                    df_full,
+                    budget,
+                    rating_thresholds=[70, 75, 80, 85]
+                )
+                
+                st.dataframe(rating_scenarios, hide_index=True, use_container_width=True)
+                
+                st.markdown("**Sonuç:** Kalite seviyesi arttıkça kaç oyuncu bulunabiliyor?")
+            
+            elif scenario_type == "Formation Değişiklikleri":
+                st.subheader("🎯 Formation What-If Analizi")
+                st.markdown("Farklı formasyonlarla ne kadar başarılı olabiliriz?")
+                
+                formation_scenarios = what_if_formation_change(
+                    selected_df,
+                    df_full,
+                    budget,
+                    formations=['4-3-3', '4-4-2', '3-5-2', '5-3-2']
+                )
+                
+                st.dataframe(formation_scenarios, hide_index=True, use_container_width=True)
+                
+                st.markdown("**Sonuç:** Formation değişiklikleri oyun gücüne nasıl etki ediyor?")
+        
+        # -----------------------------------------------------------------
+        # TAB 7: OYUNCU UYUMLULUĞU ANALİZİ
+        # -----------------------------------------------------------------
+        with tab7:
+            st.markdown(f"### {get_icon('team')} Oyuncu Uyumluluğu & Takım Kimyası", unsafe_allow_html=True)
+            
+            # Uyumluluk analizi
+            compatibility = CompatibilityAnalyzer(selected_df)
+            chemistry = compatibility.get_team_chemistry_score()
+            
+            # Kimya metrikleri
+            col_chem1, col_chem2, col_chem3, col_chem4 = st.columns(4)
+            
+            with col_chem1:
+                st.metric("Ortalama Uyumluluk", f"{chemistry['ortalama_uyumluluk']:.1f}/100", chemistry['takım_kimyası_seviyesi'])
+            with col_chem2:
+                st.metric("Genel Sinerji", f"{chemistry['genel_sinerji']:.1f}/100", "Tüm faktörler")
+            with col_chem3:
+                st.metric("Aynı Takımdan", f"{chemistry['aynı_takımdan_oyuncu_oranı']:.1f}%", "Kadroda")
+            with col_chem4:
+                st.metric("Pozisyon Dengesi", f"{chemistry['pozisyon_dengesi_skoru']:.1f}/100", "Dağılım")
+            
+            st.info(f"💡 **Takım Kimyası Tavsiyesi**: {chemistry['tavsiye']}")
+            
+            st.divider()
+            
+            # En iyi ve en kötü çiftler
+            col_best, col_worst = st.columns(2)
+            
+            with col_best:
+                st.subheader("✅ En Uyumlu Çiftler")
+                best_pairs = compatibility.get_best_pairs(top_n=5)
+                if best_pairs:
+                    for idx, pair in enumerate(best_pairs, 1):
+                        st.write(f"""
+                        **{idx}. {pair['Oyuncu 1']} ↔ {pair['Oyuncu 2']}**
+                        - Pozisyon: {pair['Pozisyon 1']} ↔ {pair['Pozisyon 2']}
+                        - Uyumluluk: {pair['Uyumluluk']:.1f}/100
+                        - {pair['Takım']}
+                        """)
+            
+            with col_worst:
+                st.subheader("⚠️ Düşük Uyumlu Çiftler")
+                weak_pairs = compatibility.get_weak_pairs(top_n=5)
+                if weak_pairs:
+                    for idx, pair in enumerate(weak_pairs, 1):
+                        st.write(f"""
+                        **{idx}. {pair['Oyuncu 1']} ↔ {pair['Oyuncu 2']}**
+                        - Pozisyon: {pair['Pozisyon 1']} ↔ {pair['Pozisyon 2']}
+                        - Uyumluluk: {pair['Uyumluluk']:.1f}/100
+                        - Problem: {pair['Problem']}
+                        """)
+            
+            st.divider()
+            
+            # Uyumluluk matrisi (heatmap benzeri)
+            st.subheader("📊 Uyumluluk Matrisi")
+            compat_matrix = compatibility.compatibility_matrix
+            
+            # Matrisi göster (Streamlit dataframe olarak)
+            st.write("Oyuncular arası uyumluluk skorları (0-100):")
+            st.dataframe(
+                compat_matrix.style.format("{:.0f}"),
+                use_container_width=True
+            )
+        
+        # -----------------------------------------------------------------
+        # TAB 8: PARETO FRONTIER ANALİZİ
+        # -----------------------------------------------------------------
+        with tab8:
+            st.markdown(f"### {get_icon('chart')} Pareto Frontier - Multi-Objective Optimizasyon", unsafe_allow_html=True)
+            st.markdown("Rating maksimize et ↔ Maliyet minimize et - En iyi trade-off çözümleri")
+            
+            # Pareto analizi
+            try:
+                pareto = ParetoAnalyzer(df_full, budget)
+                
+                st.subheader("📈 Efficient Frontier Çözümleri")
+                
+                # Efficiency metrikleri
+                efficiency = pareto.calculate_efficiency_score(selected_df)
+                
+                col_eff1, col_eff2, col_eff3 = st.columns(3)
+                
+                with col_eff1:
+                    st.metric("Verimlilik Skoru", f"{efficiency['verimlilik_skoru']:.2f}", efficiency['verimlilik_derecesi'])
+                with col_eff2:
+                    st.metric("Rating/Maliyet Oranı", f"{efficiency['rating_per_milyon']:.2f}", "Birim başına Rating")
+                with col_eff3:
+                    st.metric("Ortalama Rating", f"{efficiency['ortalama_rating']:.1f}", f"£{efficiency['toplam_maliyet']:.1f}M")
+                
+                st.divider()
+                
+                st.subheader("🎯 Trade-off Analizi Seçenekleri")
+                
+                analysis_type = st.selectbox(
+                    "Analiz türü seçin:",
+                    options=[
+                        "Pareto Frontier Çözümleri",
+                        "Alternatif Verimli Kadrolar",
+                        "Amaç Ağırlıkları Duyarlılığı"
+                    ]
+                )
+                
+                if analysis_type == "Pareto Frontier Çözümleri":
+                    st.markdown("**En iyi Rating-Maliyet kombinasyonları:**")
+                    
+                    pareto_frontier = pareto.generate_pareto_frontier(num_solutions=10)
+                    
+                    if not pareto_frontier.empty:
+                        display_pareto = pareto_frontier[[
+                            'Sıra', 'Ortalama Rating', 'Toplam Maliyet', 'Bütçe Kullanımı', 'Kalan Bütçe'
+                        ]].copy()
+                        
+                        st.dataframe(display_pareto, hide_index=True, use_container_width=True)
+                        
+                        st.markdown("**Sonuç:** Daha yüksek rating için daha fazla para harcamanız gerekecek.")
+                
+                elif analysis_type == "Alternatif Verimli Kadrolar":
+                    st.markdown("**Seçilen kadroya alternatif verimli çözümler:**")
+                    
+                    alternatives = pareto.find_efficient_alternatives(
+                        selected_df,
+                        df_full,
+                        num_alternatives=3
+                    )
+                    
+                    if alternatives:
+                        alt_df = pd.DataFrame([{
+                            'Ortalama Rating': alt['Ortalama Rating'],
+                            'Toplam Maliyet': alt['Toplam Maliyet'],
+                            'Verimlilik': alt['Verimlilik'],
+                            'Rating Farkı': alt['Fark (Rating)'],
+                            'Maliyet Farkı': alt['Fark (Maliyet)']
+                        } for alt in alternatives])
+                        
+                        st.dataframe(alt_df, hide_index=True, use_container_width=True)
+                
+                else:  # Amaç Ağırlıkları Duyarlılığı
+                    st.markdown("**Amaç ağırlıkları değişirse sonuçlar nasıl değişir?**")
+                    
+                    sensitivity = pareto.sensitivity_to_objectives(selected_df)
+                    
+                    st.dataframe(sensitivity, hide_index=True, use_container_width=True)
+                    
+                    st.markdown("""
+                    **Açıklama:**
+                    - Rating Ağırlığı ↑ → Daha pahalı oyuncuları tercih eder
+                    - Maliyet Ağırlığı ↑ → Daha ekonomik oyuncuları tercih eder
+                    """)
+            
+            except Exception as e:
+                st.error(f"Pareto analizi hesaplanırken hata: {e}")
+
+        # -----------------------------------------------------------------
+        # TAB 9: KADRO RAPORU (NARRATIVE)
+        # -----------------------------------------------------------------
+        with tab9:
+            st.markdown(f"### {get_icon('report')} Kadro Raporu & Analiz", unsafe_allow_html=True)
+            
+            # Narrative builder
+            narrative = NarrativeBuilder(selected_df, current_formation, budget)
+            
+            # Hızlı içgörüler
+            st.subheader("⚡ Hızlı İçgörüler")
+            insights = narrative.get_quick_insights()
+            
+            col_insight1, col_insight2, col_insight3 = st.columns(3)
+            with col_insight1:
+                for insight in insights[:2]:
+                    st.write(insight)
+            with col_insight2:
+                for insight in insights[2:4]:
+                    st.write(insight)
+            with col_insight3:
+                for insight in insights[4:]:
+                    st.write(insight)
+            
+            st.divider()
+            
+            # Sekmeler
+            report_tab1, report_tab2, report_tab3 = st.tabs([
+                "Genel Özet",
+                "Formation Analizi",
+                "Tavsiyeler"
+            ])
+            
+            with report_tab1:
+                st.markdown(narrative.generate_executive_summary())
+            
+            with report_tab2:
+                st.markdown(narrative.explain_formation_choice())
+                st.divider()
+                st.markdown(narrative.identify_key_players(top_n=4))
+            
+            with report_tab3:
+                st.markdown(narrative.analyze_strengths_weaknesses())
+                st.divider()
+                st.markdown(narrative.generate_recommendations())
+            
+            st.divider()
+            
+            # Tam raporu indir
+            if st.button("📥 Tam Raporu İndir (Markdown)", use_container_width=True):
+                full_report = narrative.generate_full_report()
+                st.download_button(
+                    label="Raporu İndir",
+                    data=full_report,
+                    file_name=f"kadro_raporu_{current_team}_{current_formation}.md",
+                    mime="text/markdown"
+                )
+        
+        # -----------------------------------------------------------------
+        # TAB 10: BENCH VE YEDEKLER
+        # -----------------------------------------------------------------
+        with tab10:
+            st.markdown(f"### {get_icon('subs')} Bench Kadrası & Yedek Oyuncular", unsafe_allow_html=True)
+            
+            bench_analyzer = BenchAnalyzer(selected_df, df)
+            
+            # Bench kadrası özeti
+            st.subheader("📋 Bench Kadrası Özeti")
+            st.markdown(bench_analyzer.get_bench_squad_summary())
+            
+            st.divider()
+            
+            # Sekmeler
+            bench_tab1, bench_tab2, bench_tab3 = st.tabs([
+                "Pozisyon Yedekleri",
+                "Squad Derinliği",
+                "Yaralanma Senaryoları"
+            ])
+            
+            with bench_tab1:
+                st.subheader("🔄 Pozisyon Başına En İyi Yedekler")
+                
+                pos_col = 'Alt_Pozisyon' if 'Alt_Pozisyon' in selected_df.columns else 'Atanan_Pozisyon'
+                positions = sorted(selected_df[pos_col].unique().tolist())
+                
+                selected_position = st.selectbox(
+                    "Pozisyon seçin:",
+                    options=positions
+                )
+                
+                backups = bench_analyzer.find_position_backups(selected_position, top_n=5)
+                
+                if backups.empty:
+                    st.warning(f"⚠️ {selected_position} pozisyonunda yedek oyuncu yok!")
+                else:
+                    st.dataframe(backups, hide_index=True, use_container_width=True)
+            
+            with bench_tab2:
+                st.subheader("📊 Squad Derinliği Analizi")
+                
+                depth_analysis = bench_analyzer.analyze_squad_depth()
+                
+                depth_df = pd.DataFrame([
+                    {
+                        'Pozisyon': pos,
+                        'Starter': data['starter'],
+                        'Yedek': data['backup'],
+                        'Toplam': data['total'],
+                        'Derinlik': data['derinlik']
+                    }
+                    for pos, data in depth_analysis.items()
+                ])
+                
+                st.dataframe(depth_df, hide_index=True, use_container_width=True)
+                
+                st.markdown("""
+                **Derinlik Açıklaması:**
+                - 🟢 İyi: 3+ oyuncu (Starter + 2 Yedek)
+                - 🟠 Zayıf: 2 oyuncu (Starter + 1 Yedek)
+                - 🔴 Kritik: 1 oyuncu (Yedek yok!)
+                """)
+            
+            with bench_tab3:
+                st.subheader("🤕 Yaralanma Senaryoları")
+                
+                col_scenario1, col_scenario2 = st.columns(2)
+                
+                with col_scenario1:
+                    st.markdown("**Sakatlık Simülasyonu:**")
+                    
+                    name_cols = [c for c in ['Oyuncu_Adi', 'Oyuncu'] if c in selected_df.columns]
+
+                    if not name_cols:
+                        st.warning("⚠️ Oyuncu isim kolonu bulunamadı.")
+                    else:
+                        name_col = name_cols[0]
+
+                        injured_name = st.selectbox(
+                            "Hangi oyuncu sakat olursa?",
+                            options=selected_df[name_col].tolist()
+                        )
+                        
+                        # Oyuncu ID'sini bul (tek kolon üzerinden, fallback ile)
+                        injured_player = selected_df[selected_df[name_col] == injured_name]
+                        
+                        if not injured_player.empty:
+                            player_id = injured_player.iloc[0].get('ID', injured_player.index[0])
+                            scenario = bench_analyzer.analyze_injury_scenarios(player_id, df)
+                            
+                            if 'error' not in scenario:
+                                st.write(f"**Sakat Oyuncu:** {scenario['sakat_oyuncu']}")
+                                st.write(f"**Pozisyon:** {scenario['pozisyon']}")
+                                st.write(f"**Yedek:** {scenario['yedek']}")
+                                st.write(f"**Rating Farkı:** {scenario['rating_farkı']} puan")
+                                st.write(f"**Tavsiye:** {scenario['recommendation']}")
+                                
+                                if scenario['impact']['toplam_etki'] != 0:
+                                    st.write(f"\n**Kadro Etkisi:**")
+                                    st.write(f"- Ofans kaybı: {scenario['impact']['ofans_kaybı']:.1f}")
+                                    st.write(f"- Defans kaybı: {scenario['impact']['defans_kaybı']:.1f}")
+                                    st.write(f"- Toplam: {scenario['impact']['toplam_etki']:.1f} puan")
+
     
     # Footer
     render_footer()

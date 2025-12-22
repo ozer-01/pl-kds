@@ -14,11 +14,6 @@ from .config import COLORS, DISPLAY_ICONS
 
 def apply_custom_css():
     """
-    Uygulamaya özel CSS stillerini uygular.
-    Bu fonksiyon sayfa yüklendiğinde bir kez çağrılmalıdır.
-    """
-def apply_custom_css():
-    """
     Uygulamaya özel CSS stillerini ve FontAwesome kütüphanesini yükler.
     Bu fonksiyon sayfa yüklendiğinde bir kez çağrılmalıdır.
     """
@@ -149,12 +144,12 @@ def get_icon(key):
 
 
 def format_position_display(pos):
-    """Örn: 'ST' alır, '⚽ ST' döndürür (HTML render edilmez, st.write veya selectbox için)."""
-    # Selectbox için HTML çalışmaz, ancak kullanıcı config.py'yi HTML doldurttu.
-    # Bu durumda selectbox'ta raw HTML görünecek. Bunu düzeltmek benim görevim mi?
-    # Kullanıcının talebi çok spesifik. "Bunu yapmanın en iyi yolu... format_func=lambda x: f"{DISPLAY_ICONS.get(x, '')} {x}"
-    # Aynen uyguluyorum.
-    return f"{get_icon(pos)} {pos}"
+    """Selectbox/multiselect için güvenli metin döndürür (HTML tag'lerini göstermez)."""
+    icon = get_icon(pos)
+    if icon.startswith('<i'):
+        # HTML ikonları seçicilerde ham halde gözükmesin
+        return pos
+    return f"{icon} {pos}".strip()
 
 
 def render_main_title():
@@ -221,8 +216,60 @@ def render_sidebar_info():
         f"**Premier League 2024-25** verisi ile çalışır.\n\n"
         f"**Alt pozisyonlar** (CB, RB, LB, DM, CM, CAM, RM, LM, RW, LW, ST) desteklenir.\n\n"
         f"Van Dijk (CB) artık RB'ye **atanamaz**!\n\n"
-        f"**PuLP** ile Doğrusal Programlama optimizasyonu."
+        f"**PuLP** ile Doğrusal Programlama optimizasyonu.\n\n"
+        f"**Karar Destek Sistemi** ile Duyarlılık ve Senaryo Analizi."
     )
+
+
+def render_decision_support_header():
+    """Karar destek sistemi başlığı."""
+    st.markdown("""
+    <div style="background: linear-gradient(90deg, #1a472a, #0d2818); border-radius: 10px; padding: 1.5rem; border: 3px solid #d4af37; margin: 1rem 0;">
+        <h2 style="color: #d4af37; margin: 0;">🎯 Karar Destek Sistemi</h2>
+        <p style="color: #e8f5e9; margin-top: 0.5rem;">TOPSIS Analizi, Duyarlılık Testi, Senaryo Planlama</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+
+def render_risk_indicator(risk_level: str, message: str):
+    """Risk göstergesi render et."""
+    colors = {
+        'high': '#ff6b6b',
+        'medium': '#ffd43b',
+        'low': '#51cf66'
+    }
+    
+    emoji_map = {
+        'high': '🔴',
+        'medium': '🟡',
+        'low': '🟢'
+    }
+    
+    color = colors.get(risk_level, '#999')
+    emoji = emoji_map.get(risk_level, '⚪')
+    
+    st.markdown(f"""
+    <div style="border-left: 4px solid {color}; padding: 0.5rem; margin: 0.5rem 0; background: rgba(0,0,0,0.05); border-radius: 5px;">
+        <span style="color: {color}; font-weight: bold;">{emoji} {message}</span>
+    </div>
+    """, unsafe_allow_html=True)
+
+
+def render_scenario_comparison(scenarios_df):
+    """Senaryo karşılaştırma tablosu render et."""
+    st.markdown("""
+    <style>
+    .scenario-comparison {
+        border-radius: 10px;
+        padding: 1rem;
+        background: linear-gradient(135deg, #f0f8f0, #e8f5e9);
+        margin: 1rem 0;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+    
+    st.dataframe(scenarios_df, use_container_width=True, hide_index=True)
+
 
 
 
