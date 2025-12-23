@@ -346,3 +346,97 @@ def get_optimization_summary(
         'ortalama_rating': round(selected_df['Rating'].mean(), 1) if 'Rating' in selected_df.columns else 0,
         'pozisyon_dagilimi': selected_df['Atanan_Pozisyon'].value_counts().to_dict() if 'Atanan_Pozisyon' in selected_df.columns else {}
     }
+
+
+def solve_alternative_lineup(
+    df: pd.DataFrame,
+    formation: str,
+    budget: float,
+    mode: str
+) -> Tuple[Optional[pd.DataFrame], float, float, str]:
+    """
+    Alternatif kadro modları için özel optimizasyon.
+    
+    Modlar:
+    - rating: En yüksek rating'li oyuncuları seç
+    - form: En formda oyuncuları seç  
+    - budget: En ucuz ama kaliteli kadroyu seç
+    
+    Args:
+        df: Oyuncu verileri
+        formation: Formasyon
+        budget: Bütçe limiti
+        mode: Optimizasyon modu (rating/form/budget)
+        
+    Returns:
+        Tuple: (selected_df, total_score, total_cost, status)
+    """
+    if formation not in FORMATIONS:
+        return None, 0, 0, 'Infeasible'
+    
+    formation_req = FORMATIONS[formation]
+    
+    # Sadece sağlıklı oyuncuları al
+    df = df.copy()
+    df = df[df['Sakatlik'] == 0].copy()
+    
+    if len(df) < 11:
+        return None, 0, 0, 'Infeasible'
+    
+    # Moda göre sıralama kriteri belirle
+    if mode == "rating":
+        sort_column = 'Rating'
+        ascending = False
+    elif mode == "form":
+        sort_column = 'Form'
+        ascending = False
+    elif mode == "budget":
+        sort_column = 'Fiyat_M'
+        ascending = True  # Ucuzdan pahalıya
+    else:
+        sort_column = 'Rating'
+        ascending = False
+    
+    positions = list(formation_req.keys())
+    selected_players = []
+    used_ids = set()
+    
+    # Her pozisyon için en iyi oyuncuları seç
+    for position in positions:
+        required = formation_req[position]
+        eligible_positions = POSITION_CAN_BE_FILLED_BY.get(position, [position])
+        
+        # Bu pozisyona uygun oyuncuları bul
+        eligible_players = df[
+            (df['Alt_Pozisyon'].isin(eligible_positions)) &
+            (~df['ID'].isin(used_ids))
+        ].sort_values(sort_column, ascending=ascending)
+        
+        # Gerekli sayıda oyuncu seç
+        for _, player in eligible_players.head(required).iterrows():
+            player_dict = player.to_dict()
+            player_dict['Atanan_Pozisyon'] = position
+            selected_players.append(player_dict)
+            used_ids.add(player['ID'])
+    
+    if len(selected_players) != 11:
+        return None, 0, 0, 'Infeasible'
+    
+    selected_df = pd.DataFrame(selected_players)
+    
+    # Bütçe kontrolü
+    total_cost = selected_df['Fiyat_M'].sum()
+    if total_cost > budget:
+        # Bütçe modu değilse, bütçe aşımı varsa başarısız
+        if mode != "budget":
+            return None, 0, 0, 'Infeasible'
+    
+    # Skor hesapla
+    total_score = 0
+    for _, row in selected_df.iterrows():
+        pos = row['Atanan_Pozisyon']
+        score = calculate_position_score(row, pos, 'Dengeli')
+        total_score += score
+        selected_df.loc[selected_df['ID'] == row['ID'], 'Pozisyon_Skoru'] = score
+    
+    return selected_df, total_score, total_cost, 'Optimal'

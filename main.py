@@ -33,7 +33,7 @@ from src.config import (
     POSITIONAL_WEIGHTS
 )
 from src.data_handler import load_fc26_data, normalize_data
-from src.optimizer import solve_optimal_lineup, check_formation_availability, calculate_position_score
+from src.optimizer import solve_optimal_lineup, solve_alternative_lineup, check_formation_availability, calculate_position_score
 from src.visualizer import create_football_pitch, create_team_table, create_position_stats_table
 from src.ui_components import (
     apply_custom_css, render_main_title, render_metric_card,
@@ -198,14 +198,55 @@ def main():
         st.markdown("---")
         
         # =====================================================================
-        # OPTİMİZE ET BUTONU
+        # ALTERNATİF KADRO BUTONU
         # =====================================================================
+        
+        # Alternatif kadro modları
+        KADRO_MODLARI = [
+            {"id": "optimal", "isim": "Optimal Kadro", "icon": "⚡", "aciklama": "Dengeli optimizasyon"},
+            {"id": "rating", "isim": "Rating Odaklı", "icon": "⭐", "aciklama": "En yüksek rating'li oyuncular"},
+            {"id": "form", "isim": "Form Odaklı", "icon": "🔥", "aciklama": "En formda oyuncular"},
+            {"id": "budget", "isim": "Bütçe Dostu", "icon": "💰", "aciklama": "En verimli kadro"},
+            {"id": "attack", "isim": "Hücum Ağırlıklı", "icon": "⚔️", "aciklama": "Maksimum hücum gücü"},
+            {"id": "defense", "isim": "Defans Ağırlıklı", "icon": "🛡️", "aciklama": "Maksimum defans gücü"},
+        ]
+        
+        # Session state'de mod indeksini tut
+        if 'kadro_mod_index' not in st.session_state:
+            st.session_state.kadro_mod_index = 0
+        
+        # Mevcut mod
+        current_mod = KADRO_MODLARI[st.session_state.kadro_mod_index]
+        
+        # Buton - tıklandığında sonraki moda geç
         optimize_btn = st.button(
-            "Kadroyu Optimize Et",
+            "🔄 Alternatif Kadro Göster",
             use_container_width=True,
             type="primary",
-            icon="🚀"
+            help="Her tıklamada farklı bir optimizasyon stratejisi ile kadro gösterir"
         )
+        
+        if optimize_btn:
+            # Sonraki moda geç
+            st.session_state.kadro_mod_index = (st.session_state.kadro_mod_index + 1) % len(KADRO_MODLARI)
+            current_mod = KADRO_MODLARI[st.session_state.kadro_mod_index]
+        
+        # Aktif modu göster
+        st.markdown(f"""
+        <div style="
+            background: linear-gradient(135deg, #1a472a, #0d2818);
+            border-radius: 8px;
+            padding: 0.5rem;
+            margin-top: 0.5rem;
+            text-align: center;
+            border: 1px solid #2d5a3d;
+        ">
+            <span style="font-size: 1.2rem;">{current_mod['icon']}</span>
+            <span style="color: #ffd700; font-weight: bold;"> {current_mod['isim']}</span>
+            <br>
+            <small style="color: #98c379;">({st.session_state.kadro_mod_index + 1}/{len(KADRO_MODLARI)}) {current_mod['aciklama']}</small>
+        </div>
+        """, unsafe_allow_html=True)
         
         st.markdown("---")
         
@@ -223,8 +264,9 @@ def main():
     # ANA EKRAN - OPTİMİZASYON
     # =========================================================================
     
-    # Parametre değişikliği kontrolü
-    current_params = f"{selected_team}_{formation}_{budget}_{strategy}"
+    # Parametre değişikliği kontrolü (mod dahil)
+    kadro_mod = current_mod['id']
+    current_params = f"{selected_team}_{formation}_{budget}_{strategy}_{kadro_mod}"
     
     needs_optimization = (
         'last_params' not in st.session_state or 
@@ -245,10 +287,35 @@ def main():
             )
             return
         
-        with st.spinner(f"🔄 {selected_team} için optimal kadro hesaplanıyor..."):
-            selected_df, total_score, total_cost, status = solve_optimal_lineup(
-                df, formation, budget, strategy, use_flexible_positions=True
-            )
+        # Moda göre strateji ayarla
+        effective_strategy = strategy  # Varsayılan: kullanıcının seçtiği strateji
+        
+        if kadro_mod == "attack":
+            effective_strategy = "Ofansif"
+        elif kadro_mod == "defense":
+            effective_strategy = "Defansif"
+        elif kadro_mod == "rating":
+            effective_strategy = "Dengeli"  # Rating ağırlıklı (form düşük)
+        elif kadro_mod == "form":
+            effective_strategy = "Dengeli"  # Form ağırlıklı
+        elif kadro_mod == "budget":
+            effective_strategy = "Dengeli"  # Bütçe dostu
+        
+        # Mod bilgisini session_state'e kaydet
+        st.session_state.kadro_mod = current_mod
+        
+        with st.spinner(f"🔄 {selected_team} için {current_mod['isim']} hesaplanıyor..."):
+            # Alternatif modlar için özel işlem
+            if kadro_mod in ["rating", "form", "budget"]:
+                # Bu modlar için sıralama bazlı seçim yap
+                selected_df, total_score, total_cost, status = solve_alternative_lineup(
+                    df, formation, budget, kadro_mod
+                )
+            else:
+                # Normal optimizasyon
+                selected_df, total_score, total_cost, status = solve_optimal_lineup(
+                    df, formation, budget, effective_strategy, use_flexible_positions=True
+                )
         
         if status == 'Optimal' and selected_df is not None:
             st.session_state.selected_df = selected_df
