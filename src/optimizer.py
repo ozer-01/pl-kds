@@ -42,35 +42,57 @@ from .config import (
 )
 
 
-def calculate_position_score(row: pd.Series, position: str) -> float:
+def calculate_position_score(row: pd.Series, position: str, strategy: str = 'Dengeli') -> float:
     """
     Bir oyuncunun belirli bir pozisyon için uygunluk skorunu hesaplar.
     
-    YENİ MANTIK: Hibrit Skor
+    YENİ MANTIK: Hibrit Skor + Strateji Ağırlıkları
     Score = (Base_Rating_Score * 0.7) + (Data_Score * 0.3)
     
-    Böylece Rating'i yüksek olan (Van Dijk) her zaman temel bir puana sahip olur,
-    istatistikler ise oyuncuları birbirinden ayırır.
+    Strateji ağırlıkları:
+    - Ofansif: ofans %50, defans %20, form %30
+    - Defansif: ofans %20, defans %50, form %30
+    - Dengeli: ofans %35, defans %35, form %30
+    
+    Args:
+        row: Oyuncu verisi
+        position: Atanacak pozisyon
+        strategy: Takım stratejisi (Dengeli/Ofansif/Defansif)
     """
     
-    # 1. Base Rating Skorunu Hesapla (Herkes için)
-    # Pozisyona göre ofans/defans ağırlığı
-    offense_weight = 0.5
-    defense_weight = 0.5
+    # 1. Strateji ağırlıklarını al
+    strategy_weights = STRATEGY_WEIGHTS.get(strategy, STRATEGY_WEIGHTS['Dengeli'])
+    base_offense = strategy_weights['ofans']
+    base_defense = strategy_weights['defans']
+    form_weight = strategy_weights['form']
     
+    # 2. Pozisyona göre ağırlıkları ayarla
+    # Strateji ağırlıklarını pozisyona göre modifiye et
     if position in ['CB', 'LB', 'RB', 'GK', 'DM']:
-        offense_weight = 0.3
-        defense_weight = 0.7
+        # Defansif pozisyonlar - defans ağırlığını artır
+        offense_weight = base_offense * 0.6
+        defense_weight = base_defense * 1.4
     elif position in ['ST', 'LW', 'RW', 'CAM']:
-        offense_weight = 0.7
-        defense_weight = 0.3
+        # Ofansif pozisyonlar - ofans ağırlığını artır
+        offense_weight = base_offense * 1.4
+        defense_weight = base_defense * 0.6
+    else:
+        # Orta saha pozisyonları - strateji ağırlıklarını aynen kullan
+        offense_weight = base_offense
+        defense_weight = base_defense
+    
+    # Ağırlıkları normalize et (toplam ~1 olsun)
+    total = offense_weight + defense_weight + form_weight
+    offense_weight /= total
+    defense_weight /= total
+    form_weight /= total
         
     # Rating skoru (0-100 arası olması bekleniyor ama normalizasyona bağlı)
     # Norm değerler 0-1 arasında.
     base_score = (
         offense_weight * row.get('Ofans_Gucu_Norm', 0.5) +
         defense_weight * row.get('Defans_Gucu_Norm', 0.5) +
-        0.1 * row.get('Form_Norm', 0.5)
+        form_weight * row.get('Form_Norm', 0.5)
     ) * 100
     
     # 2. Veri Bazlı Skor Hesapla (Varsa)
@@ -153,7 +175,7 @@ def solve_optimal_lineup(
             # Eğer uygun değilse skor hesaplamaya bile gerek yok (veya 0 ver)
             eligible_positions = POSITION_CAN_BE_FILLED_BY.get(p, [p])
             if row['Alt_Pozisyon'] in eligible_positions:
-                scores[(i, p)] = calculate_position_score(row, p)
+                scores[(i, p)] = calculate_position_score(row, p, strategy)
             else:
                 scores[(i, p)] = -1000 # Cezalı puan (veya constraint ile engellenecek)
 
