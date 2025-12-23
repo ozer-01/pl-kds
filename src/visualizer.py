@@ -431,3 +431,219 @@ def create_squad_summary(selected_df: pd.DataFrame, formation: str) -> dict:
         summary['ortalama_rating'] = selected_df['Rating'].mean()
     
     return summary
+
+
+def create_player_comparison_radar(
+    player1: pd.Series, 
+    player2: pd.Series,
+    metrics: list = None
+) -> go.Figure:
+    """
+    İki oyuncuyu karşılaştıran Radar (Spider) Chart oluşturur.
+    
+    Args:
+        player1: İlk oyuncunun verileri (pd.Series)
+        player2: İkinci oyuncunun verileri (pd.Series)
+        metrics: Karşılaştırılacak metrikler listesi (varsayılan: temel metrikler)
+        
+    Returns:
+        go.Figure: Plotly radar chart figure nesnesi
+    """
+    # Varsayılan metrikler
+    if metrics is None:
+        metrics = ['Form', 'Ofans_Gucu', 'Defans_Gucu', 'Fiyat_M']
+        
+        # Rating varsa ekle
+        if 'Rating' in player1.index:
+            metrics.insert(0, 'Rating')
+        
+        # İstatistik metrikleri varsa ekle
+        stat_metrics = ['stat_xG', 'stat_xA', 'stat_goals', 'stat_assists', 'stat_creativity', 'stat_threat']
+        for sm in stat_metrics:
+            if sm in player1.index and player1[sm] > 0:
+                metrics.append(sm)
+    
+    # Sadece her iki oyuncuda da olan metrikleri kullan
+    valid_metrics = [m for m in metrics if m in player1.index and m in player2.index]
+    
+    if len(valid_metrics) < 3:
+        # Yeterli metrik yoksa basit karşılaştırma
+        valid_metrics = ['Form', 'Ofans_Gucu', 'Defans_Gucu']
+    
+    # Değerleri al
+    values1 = [player1[m] if pd.notna(player1[m]) else 0 for m in valid_metrics]
+    values2 = [player2[m] if pd.notna(player2[m]) else 0 for m in valid_metrics]
+    
+    # Normalizasyon (0-100 arası)
+    max_vals = [max(v1, v2, 1) for v1, v2 in zip(values1, values2)]
+    norm_values1 = [v / mv * 100 if mv > 0 else 0 for v, mv in zip(values1, max_vals)]
+    norm_values2 = [v / mv * 100 if mv > 0 else 0 for v, mv in zip(values2, max_vals)]
+    
+    # Metrik isimlerini Türkçeleştir
+    metric_labels = {
+        'Rating': 'OVR Rating',
+        'Form': 'Form',
+        'Ofans_Gucu': 'Ofans',
+        'Defans_Gucu': 'Defans',
+        'Fiyat_M': 'Değer (£M)',
+        'stat_xG': 'xG',
+        'stat_xA': 'xA',
+        'stat_goals': 'Goller',
+        'stat_assists': 'Asistler',
+        'stat_creativity': 'Yaratıcılık',
+        'stat_threat': 'Tehdit',
+        'stat_influence': 'Etki',
+        'stat_clean_sheets': 'Clean Sheet'
+    }
+    
+    labels = [metric_labels.get(m, m) for m in valid_metrics]
+    
+    # Radar için kapatma (ilk değer sona eklenir)
+    norm_values1.append(norm_values1[0])
+    norm_values2.append(norm_values2[0])
+    labels.append(labels[0])
+    
+    # Oyuncu isimleri
+    name1 = player1.get('Oyuncu', 'Oyuncu 1')
+    name2 = player2.get('Oyuncu', 'Oyuncu 2')
+    
+    # Figure oluştur
+    fig = go.Figure()
+    
+    # Oyuncu 1 - Mavi
+    fig.add_trace(go.Scatterpolar(
+        r=norm_values1,
+        theta=labels,
+        fill='toself',
+        fillcolor='rgba(66, 133, 244, 0.3)',
+        line=dict(color='#4285F4', width=2),
+        name=name1,
+        hovertemplate=f'<b>{name1}</b><br>%{{theta}}: %{{r:.1f}}<extra></extra>'
+    ))
+    
+    # Oyuncu 2 - Turuncu
+    fig.add_trace(go.Scatterpolar(
+        r=norm_values2,
+        theta=labels,
+        fill='toself',
+        fillcolor='rgba(234, 67, 53, 0.3)',
+        line=dict(color='#EA4335', width=2),
+        name=name2,
+        hovertemplate=f'<b>{name2}</b><br>%{{theta}}: %{{r:.1f}}<extra></extra>'
+    ))
+    
+    # Layout
+    fig.update_layout(
+        title=dict(
+            text=f"<b>⚔️ {name1} vs {name2}</b>",
+            font=dict(size=18, color='white'),
+            x=0.5
+        ),
+        polar=dict(
+            bgcolor='rgba(0,0,0,0)',
+            radialaxis=dict(
+                visible=True,
+                range=[0, 100],
+                tickfont=dict(size=10, color='white'),
+                gridcolor='rgba(255,255,255,0.3)'
+            ),
+            angularaxis=dict(
+                tickfont=dict(size=11, color='white'),
+                gridcolor='rgba(255,255,255,0.3)'
+            )
+        ),
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        legend=dict(
+            orientation='h',
+            yanchor='bottom',
+            y=-0.15,
+            xanchor='center',
+            x=0.5,
+            font=dict(color='white', size=12)
+        ),
+        margin=dict(l=60, r=60, t=60, b=60),
+        height=450
+    )
+    
+    return fig
+
+
+def create_multi_player_radar(
+    players_df: pd.DataFrame,
+    metrics: list = None,
+    title: str = "Oyuncu Karşılaştırması"
+) -> go.Figure:
+    """
+    Birden fazla oyuncuyu karşılaştıran Radar Chart oluşturur.
+    
+    Args:
+        players_df: Oyuncuların DataFrame'i (max 5 oyuncu önerilir)
+        metrics: Karşılaştırılacak metrikler
+        title: Grafik başlığı
+        
+    Returns:
+        go.Figure: Plotly radar chart
+    """
+    # Renk paleti
+    colors = [
+        ('rgba(66, 133, 244, 0.3)', '#4285F4'),   # Mavi
+        ('rgba(234, 67, 53, 0.3)', '#EA4335'),    # Kırmızı
+        ('rgba(52, 168, 83, 0.3)', '#34A853'),    # Yeşil
+        ('rgba(251, 188, 4, 0.3)', '#FBBC04'),    # Sarı
+        ('rgba(155, 89, 182, 0.3)', '#9B59B6')    # Mor
+    ]
+    
+    # Varsayılan metrikler
+    if metrics is None:
+        metrics = ['Form', 'Ofans_Gucu', 'Defans_Gucu']
+        if 'Rating' in players_df.columns:
+            metrics.insert(0, 'Rating')
+    
+    # Metrik etiketleri
+    metric_labels = {
+        'Rating': 'OVR', 'Form': 'Form', 'Ofans_Gucu': 'Ofans',
+        'Defans_Gucu': 'Defans', 'Fiyat_M': 'Değer'
+    }
+    labels = [metric_labels.get(m, m) for m in metrics]
+    labels.append(labels[0])  # Kapatma
+    
+    fig = go.Figure()
+    
+    for idx, (_, player) in enumerate(players_df.iterrows()):
+        if idx >= len(colors):
+            break
+            
+        values = [player[m] if m in player and pd.notna(player[m]) else 0 for m in metrics]
+        
+        # Normalizasyon
+        max_vals = players_df[metrics].max()
+        norm_values = [(v / max_vals[m] * 100) if max_vals[m] > 0 else 0 
+                       for v, m in zip(values, metrics)]
+        norm_values.append(norm_values[0])
+        
+        fill_color, line_color = colors[idx]
+        
+        fig.add_trace(go.Scatterpolar(
+            r=norm_values,
+            theta=labels,
+            fill='toself',
+            fillcolor=fill_color,
+            line=dict(color=line_color, width=2),
+            name=player.get('Oyuncu', f'Oyuncu {idx+1}')
+        ))
+    
+    fig.update_layout(
+        title=dict(text=f"<b>{title}</b>", font=dict(size=16, color='white'), x=0.5),
+        polar=dict(
+            bgcolor='rgba(0,0,0,0)',
+            radialaxis=dict(visible=True, range=[0, 100], gridcolor='rgba(255,255,255,0.3)'),
+            angularaxis=dict(tickfont=dict(color='white'), gridcolor='rgba(255,255,255,0.3)')
+        ),
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        legend=dict(orientation='h', y=-0.1, x=0.5, xanchor='center', font=dict(color='white')),
+        height=400
+    )
+    
+    return fig

@@ -42,35 +42,57 @@ from .config import (
 )
 
 
-def calculate_position_score(row: pd.Series, position: str) -> float:
+def calculate_position_score(row: pd.Series, position: str, strategy: str = 'Dengeli') -> float:
     """
     Bir oyuncunun belirli bir pozisyon için uygunluk skorunu hesaplar.
     
-    YENİ MANTIK: Hibrit Skor
+    YENİ MANTIK: Hibrit Skor + Strateji Ağırlıkları
     Score = (Base_Rating_Score * 0.7) + (Data_Score * 0.3)
     
-    Böylece Rating'i yüksek olan (Van Dijk) her zaman temel bir puana sahip olur,
-    istatistikler ise oyuncuları birbirinden ayırır.
+    Strateji ağırlıkları:
+    - Ofansif: ofans %50, defans %20, form %30
+    - Defansif: ofans %20, defans %50, form %30
+    - Dengeli: ofans %35, defans %35, form %30
+    
+    Args:
+        row: Oyuncu verisi
+        position: Atanacak pozisyon
+        strategy: Takım stratejisi (Dengeli/Ofansif/Defansif)
     """
     
-    # 1. Base Rating Skorunu Hesapla (Herkes için)
-    # Pozisyona göre ofans/defans ağırlığı
-    offense_weight = 0.5
-    defense_weight = 0.5
+    # 1. Strateji ağırlıklarını al
+    strategy_weights = STRATEGY_WEIGHTS.get(strategy, STRATEGY_WEIGHTS['Dengeli'])
+    base_offense = strategy_weights['ofans']
+    base_defense = strategy_weights['defans']
+    form_weight = strategy_weights['form']
     
+    # 2. Pozisyona göre ağırlıkları ayarla
+    # Strateji ağırlıklarını pozisyona göre modifiye et
     if position in ['CB', 'LB', 'RB', 'GK', 'DM']:
-        offense_weight = 0.3
-        defense_weight = 0.7
+        # Defansif pozisyonlar - defans ağırlığını artır
+        offense_weight = base_offense * 0.6
+        defense_weight = base_defense * 1.4
     elif position in ['ST', 'LW', 'RW', 'CAM']:
-        offense_weight = 0.7
-        defense_weight = 0.3
+        # Ofansif pozisyonlar - ofans ağırlığını artır
+        offense_weight = base_offense * 1.4
+        defense_weight = base_defense * 0.6
+    else:
+        # Orta saha pozisyonları - strateji ağırlıklarını aynen kullan
+        offense_weight = base_offense
+        defense_weight = base_defense
+    
+    # Ağırlıkları normalize et (toplam ~1 olsun)
+    total = offense_weight + defense_weight + form_weight
+    offense_weight /= total
+    defense_weight /= total
+    form_weight /= total
         
     # Rating skoru (0-100 arası olması bekleniyor ama normalizasyona bağlı)
     # Norm değerler 0-1 arasında.
     base_score = (
         offense_weight * row.get('Ofans_Gucu_Norm', 0.5) +
         defense_weight * row.get('Defans_Gucu_Norm', 0.5) +
-        0.1 * row.get('Form_Norm', 0.5)
+        form_weight * row.get('Form_Norm', 0.5)
     ) * 100
     
     # 2. Veri Bazlı Skor Hesapla (Varsa)
@@ -153,7 +175,7 @@ def solve_optimal_lineup(
             # Eğer uygun değilse skor hesaplamaya bile gerek yok (veya 0 ver)
             eligible_positions = POSITION_CAN_BE_FILLED_BY.get(p, [p])
             if row['Alt_Pozisyon'] in eligible_positions:
-                scores[(i, p)] = calculate_position_score(row, p)
+                scores[(i, p)] = calculate_position_score(row, p, strategy)
             else:
                 scores[(i, p)] = -1000 # Cezalı puan (veya constraint ile engellenecek)
 
@@ -324,3 +346,97 @@ def get_optimization_summary(
         'ortalama_rating': round(selected_df['Rating'].mean(), 1) if 'Rating' in selected_df.columns else 0,
         'pozisyon_dagilimi': selected_df['Atanan_Pozisyon'].value_counts().to_dict() if 'Atanan_Pozisyon' in selected_df.columns else {}
     }
+
+
+def solve_alternative_lineup(
+    df: pd.DataFrame,
+    formation: str,
+    budget: float,
+    mode: str
+) -> Tuple[Optional[pd.DataFrame], float, float, str]:
+    """
+    Alternatif kadro modları için özel optimizasyon.
+    
+    Modlar:
+    - rating: En yüksek rating'li oyuncuları seç
+    - form: En formda oyuncuları seç  
+    - budget: En ucuz ama kaliteli kadroyu seç
+    
+    Args:
+        df: Oyuncu verileri
+        formation: Formasyon
+        budget: Bütçe limiti
+        mode: Optimizasyon modu (rating/form/budget)
+        
+    Returns:
+        Tuple: (selected_df, total_score, total_cost, status)
+    """
+    if formation not in FORMATIONS:
+        return None, 0, 0, 'Infeasible'
+    
+    formation_req = FORMATIONS[formation]
+    
+    # Sadece sağlıklı oyuncuları al
+    df = df.copy()
+    df = df[df['Sakatlik'] == 0].copy()
+    
+    if len(df) < 11:
+        return None, 0, 0, 'Infeasible'
+    
+    # Moda göre sıralama kriteri belirle
+    if mode == "rating":
+        sort_column = 'Rating'
+        ascending = False
+    elif mode == "form":
+        sort_column = 'Form'
+        ascending = False
+    elif mode == "budget":
+        sort_column = 'Fiyat_M'
+        ascending = True  # Ucuzdan pahalıya
+    else:
+        sort_column = 'Rating'
+        ascending = False
+    
+    positions = list(formation_req.keys())
+    selected_players = []
+    used_ids = set()
+    
+    # Her pozisyon için en iyi oyuncuları seç
+    for position in positions:
+        required = formation_req[position]
+        eligible_positions = POSITION_CAN_BE_FILLED_BY.get(position, [position])
+        
+        # Bu pozisyona uygun oyuncuları bul
+        eligible_players = df[
+            (df['Alt_Pozisyon'].isin(eligible_positions)) &
+            (~df['ID'].isin(used_ids))
+        ].sort_values(sort_column, ascending=ascending)
+        
+        # Gerekli sayıda oyuncu seç
+        for _, player in eligible_players.head(required).iterrows():
+            player_dict = player.to_dict()
+            player_dict['Atanan_Pozisyon'] = position
+            selected_players.append(player_dict)
+            used_ids.add(player['ID'])
+    
+    if len(selected_players) != 11:
+        return None, 0, 0, 'Infeasible'
+    
+    selected_df = pd.DataFrame(selected_players)
+    
+    # Bütçe kontrolü
+    total_cost = selected_df['Fiyat_M'].sum()
+    if total_cost > budget:
+        # Bütçe modu değilse, bütçe aşımı varsa başarısız
+        if mode != "budget":
+            return None, 0, 0, 'Infeasible'
+    
+    # Skor hesapla
+    total_score = 0
+    for _, row in selected_df.iterrows():
+        pos = row['Atanan_Pozisyon']
+        score = calculate_position_score(row, pos, 'Dengeli')
+        total_score += score
+        selected_df.loc[selected_df['ID'] == row['ID'], 'Pozisyon_Skoru'] = score
+    
+    return selected_df, total_score, total_cost, 'Optimal'

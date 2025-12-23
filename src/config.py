@@ -301,7 +301,7 @@ POSITION_PRICE_MULTIPLIER = {
 # =============================================================================
 
 PAGE_CONFIG = {
-    'page_title': "⚽ Kadro Optimizasyonu KDS - FC26",
+    'page_title': "⚽ Premier Lig Kadro Optimizasyonu KDS",
     'page_icon': "⚽",
     'layout': "wide",
     'initial_sidebar_state': "expanded"
